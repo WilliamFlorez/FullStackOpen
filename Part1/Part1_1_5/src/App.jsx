@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 const Header = (props) => {
   /* console.log(props.course.name)*/
    return ( <h1> {props.course.name}</h1>  )
@@ -27,10 +29,29 @@ const Header = (props) => {
      </div>
    )
  }
+
+ const Boton = (props) => {
+  
+      return(
+        <button onClick={props.onClick}>
+          {props.text}
+        </button>
+      )
+
+ }
  
- 
+
  const App = () => {
- 
+
+      const [ count, setCount] = useState(0)
+      const increaseByOne = () => {setCount(count + 1) 
+        console.log('increase '+ count)}
+      const decreaseByOne = () => {setCount(count - 1) 
+        console.log('decrease '+ count)}
+      const setToZero = () => {setCount(0)
+            console.log('set zero '+ count)}
+
+
        const info ={
          name: 'Half Stack application development',
          parts:[ 
@@ -39,16 +60,22 @@ const Header = (props) => {
          {part : 'State of a component' , exercise : 14}
                ]
              }
-             
  
+             /* BOTON es una funcion  */
    return (
      <div>
-       
          <Header course={info}/>
          <Content cont = {info}/>
          <Total exercises1={info.parts[0].exercise} exercises2 ={info.parts[1].exercise} exercises3 ={info.parts[2].exercise}  />
-     
-     
+        
+         <button onClick={increaseByOne } text="plus" >plus</button>
+         <Boton onClick={decreaseByOne} text="minus" />
+         <Boton onClick={setToZero} text = "zero"/>
+ 
+          <br/>
+            <display-4>{count}</display-4>
+          <br/>
+         
      </div>
  
      
