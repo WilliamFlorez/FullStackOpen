@@ -1,29 +1,52 @@
-import { use } from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([''])
   const [busq, Setbusq] = useState('')
   const [newname, setNewName] = useState('')
   const [newnumb, setNewNumb] = useState('')
-
-  const AddPerson = (props) => {
-          props.preventDefault()
-          console.log("name :: "+ newname)
-          console.log("numb :: "+ newnumb)
-          if(persons.some(person => person.name === newname)){
-            alert(`${newname} is already added to phonebook`)
-            return
+  const baseURL = 'http://localhost:3001/persons'
+      useEffect (() =>{
+        axios.get(baseURL).then(
+          response =>{
+            console.log("using useEffect || "+response.data)
+            setPersons(response.data)
           }
-          setPersons(persons.concat({name: newname, number: newnumb}))
-          setNewName('')
-          setNewNumb('')
-    }
+        )},[]
+      )
+
+const AddPerson = (props) => {
+  props.preventDefault()
+  console.log("AXIOS name :: "+ newname)
+  console.log("AXIOS numb :: "+ newnumb)
+      if(persons.some(person => person.name === newname)){
+          const indice = persons.findIndex(person => person.name === newname);
+          const numID = persons[indice].id 
+          alert(`${newname} is already added to phonebook`)
+          Update(newnumb,numID)
+          return
+      }
+      
+      const maxId = Math.max(...persons.map(response => Number(response.id)))
+      const newId = maxId + 1
+
+      const personObject = {
+            name : newname,
+            number : newnumb,
+            id : newId.toString()
+      }
+
+      axios.post(baseURL,personObject).then(response =>{
+        setPersons(persons.concat(response.data))
+      })
+
+      setNewName('')
+      setNewNumb('')
+}
+
+
+
 
     const PersonForm = () =>{
       return (
@@ -41,6 +64,27 @@ const App = () => {
               </form>
       )      
     }
+    const DeleteUser = (props) =>{
+      console.log("Borrar||"+ props.target.value)
+      const DelURL =baseURL+"/"+ props.target.value
+
+  
+      axios.delete(DelURL).then(() => {
+        console.log("BORRADO")
+        setPersons(persons.filter(person => person.id !== props.target.value))
+      })
+    }
+
+    const Update = (numupdate, numID) => {
+     const UpdateData = { number : numupdate }
+      axios.patch(baseURL+"/"+numID,UpdateData)
+      .then(response =>{
+            console.log('Update USER')
+            setPersons(persons.map(person => person.id === numID ? { ...person, number: numupdate } : person))
+     
+      })
+
+    }
     const Listar = (props) =>{
 
         const resultados = props.value ?
@@ -51,7 +95,9 @@ const App = () => {
 
         return (
           <div>
-             {resultados.map( (person,index) =>{return <div key={index}>{person.name +"||"+ person.number}</div>})}
+             {resultados.map( (person,index) =>{return <div key={index} >{person.name +"||"+ person.number}
+                <button key={person.id} onClick={DeleteUser} value={person.id}>eliminar </button>
+             </div>})}
           </div>
         )
 
@@ -66,7 +112,7 @@ const App = () => {
       console.log(event.target.value)
       setNewName(event.target.value)
     }
-      const HandleChangeNumb = (event) =>{
+    const HandleChangeNumb = (event) =>{
         console.log(event.target.value)
         setNewNumb(event.target.value)
     }
