@@ -1,0 +1,13 @@
+### para separar peticiones
+GET http://localhost:3001/api/notes
+### 
+GET http://localhost:3001/api/notes/2
+###
+POST http://localhost:3001/api/notes/
+content-type: application/json
+
+{
+    "content" : "VS code rest client is a pretty handly tool",
+    "important" : true
+
+}

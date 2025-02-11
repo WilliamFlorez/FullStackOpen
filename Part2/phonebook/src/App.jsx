@@ -1,12 +1,20 @@
 import { useState,useEffect } from 'react'
 import axios from 'axios'
-
+import './App.css'
 const App = () => {
   const [persons, setPersons] = useState([''])
   const [busq, Setbusq] = useState('')
   const [newname, setNewName] = useState('')
   const [newnumb, setNewNumb] = useState('')
-  const baseURL = 'http://localhost:3001/persons'
+  const [errorMessage, setErrorMessage] = useState({type:'',message :''})
+  
+/*  const baseURL = 'http://localhost:3001/persons'*/
+//URL PART3
+const baseURL = 'http://localhost:3001/api/persons'
+const getAll = () =>{
+    const request = axios.get(baseURL)
+    return request.then(response => response.data)
+}
       useEffect (() =>{
         axios.get(baseURL).then(
           response =>{
@@ -24,8 +32,11 @@ const AddPerson = (props) => {
           const indice = persons.findIndex(person => person.name === newname);
           const numID = persons[indice].id 
           alert(`${newname} is already added to phonebook`)
+              setErrorMessage({type:'error',message:`actualizando valor ${newname}`})
           Update(newnumb,numID)
           return
+      }else{
+        setErrorMessage({type:'success',message:`nuevo valor ${newname}`})
       }
       
       const maxId = Math.max(...persons.map(response => Number(response.id)))
@@ -45,8 +56,16 @@ const AddPerson = (props) => {
       setNewNumb('')
 }
 
+const Notification = ({type, message }) => {
+        if(!message ){return null}
 
+        const notificationStyle = type === 'error' ? 'error' :'success'
 
+        return (
+          <div className={notificationStyle}>{message}</div>
+        )
+
+}
 
     const PersonForm = () =>{
       return (
@@ -68,6 +87,7 @@ const AddPerson = (props) => {
       console.log("Borrar||"+ props.target.value)
       const DelURL =baseURL+"/"+ props.target.value
 
+      setErrorMessage({type:'error',message:`Borrado valor ${persons.find(person => person.id === props.target.value).name}`})
   
       axios.delete(DelURL).then(() => {
         console.log("BORRADO")
@@ -122,6 +142,8 @@ const AddPerson = (props) => {
       <h2>Phonebook</h2>
         buscar <input value ={busq} onChange={HandleChangeBusq}/><br></br>
       
+      <Notification type={errorMessage.type} message={errorMessage.message} />
+           
       <h1>Add a new</h1>
       <PersonForm/>
       <h2>Numbers</h2>
