@@ -103,7 +103,7 @@ app.post('/api/persons',(request,response)=>{
       "number": body.number
     }
     data= data.concat(person)
-    response.json(data)
+    response.json(person)
 
 })
 

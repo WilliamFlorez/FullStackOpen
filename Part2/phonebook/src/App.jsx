@@ -10,7 +10,10 @@ const App = () => {
   
 /*  const baseURL = 'http://localhost:3001/persons'*/
 //URL PART3
-const baseURL = 'http://localhost:3001/api/persons'
+//const baseURL = 'http://localhost:3001/api/persons'
+//URL RENDER
+const baseURL = 'https://fullstackopen-kj3p.onrender.com/api/persons'
+
 const getAll = () =>{
     const request = axios.get(baseURL)
     return request.then(response => response.data)
@@ -45,11 +48,11 @@ const AddPerson = (props) => {
       const personObject = {
             name : newname,
             number : newnumb,
-            id : newId.toString()
+          //  id : newId.toString()
       }
 
       axios.post(baseURL,personObject).then(response =>{
-        setPersons(persons.concat(response.data))
+        setPersons(persons.concat(response.person))
       })
 
       setNewName('')
