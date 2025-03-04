@@ -52,7 +52,7 @@ const AddPerson = (props) => {
       }
 
       axios.post(baseURL,personObject).then(response =>{
-        setPersons(persons.concat(response.person))
+        setPersons(persons.concat(response.data))
       })
 
       setNewName('')
