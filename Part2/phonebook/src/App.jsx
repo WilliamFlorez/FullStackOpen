@@ -10,7 +10,7 @@ const App = () => {
   
 /*  const baseURL = 'http://localhost:3001/persons'*/
 //URL PART3
-//const baseURL = 'http://localhost:3001/api/persons'
+//const baseURL = 'http://localhost:3001/api/persons' {{}}
 //URL RENDER
 const baseURL = 'https://fullstackopen-kj3p.onrender.com/api/persons'
 
@@ -86,6 +86,8 @@ const Notification = ({type, message }) => {
               </form>
       )      
     }
+
+    
     const DeleteUser = (props) =>{
       console.log("Borrar||"+ props.target.value)
       const DelURL =baseURL+"/"+ props.target.value

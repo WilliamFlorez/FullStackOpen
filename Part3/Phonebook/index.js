@@ -3,6 +3,7 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 
+app.use(express.static('/dist'))  // Sirve archivos estáticos desde ../dist
 /*MIDDleware */
 app.use(express.json()) /*to be able to obtain BODY using request */
 app.use(cors()) /*to be able to use the server from another domain */
