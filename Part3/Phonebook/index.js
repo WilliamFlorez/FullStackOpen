@@ -3,7 +3,12 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 
-app.use(express.static('/dist'))  // Sirve archivos estáticos desde ../dist
+const path = require('path'); // Añade esto al inicio del archivo
+// Sirve archivos estáticos desde la carpeta 'dist' dentro de 'Phonebook'
+app.use(express.static(path.join(__dirname, 'dist')));
+// otra forma
+//app.use(express.static('./dist'));  // Usa './dist' para referirse a la carpeta actual
+
 /*MIDDleware */
 app.use(express.json()) /*to be able to obtain BODY using request */
 app.use(cors()) /*to be able to use the server from another domain */
